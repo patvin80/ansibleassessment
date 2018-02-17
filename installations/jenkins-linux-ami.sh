@@ -13,3 +13,5 @@ sudo chkconfig --add jenkins
 
 # Install Ansible
 sudo pip install ansible
+
+sudo pip install boto
