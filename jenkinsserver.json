@@ -1,0 +1,169 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Instantiates the EC2 instance with Jenkins based upon Bitnami AMI",
+    "Metadata": {
+
+    },
+    "Parameters": {
+        
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+        "VPC" : {
+            "Type" : "AWS::EC2::VPC",
+            "Properties" : {
+              "CidrBlock" : "10.0.0.0/16",
+              "Tags" : [
+                { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                { "Key": "Name", "Value": "Project_VPC"},
+                { "Key" : "Network", "Value" : "Public" }
+              ]
+            }
+        },
+        "PublicSubnet" : {
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "VpcId" : { "Ref" : "VPC" },
+                "CidrBlock" : "10.0.0.0/24",
+                "Tags" : [
+                    {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    {"Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_Public_Subnet"}
+                ]
+            }
+        },
+        "InternetGateway" : {
+            "Type" : "AWS::EC2::InternetGateway",
+            "Properties" : {
+              "Tags" : [
+                { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                { "Key" : "Network", "Value" : "Public" },
+                { "Key": "Name", "Value": "Project_Internetgateway"}
+              ]
+            }
+          },
+        "AttachGateway" : {
+             "Type" : "AWS::EC2::VPCGatewayAttachment",
+             "Properties" : {
+                "VpcId" : { "Ref" : "VPC" },
+                "InternetGatewayId" : { "Ref" : "InternetGateway" }
+                }
+            },
+        "RouteTable" : {
+            "Type" : "AWS::EC2::RouteTable",
+            "Properties" : {
+                "VpcId" : { "Ref" : "VPC" },
+                "Tags" : [
+                    { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    { "Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_RouteTable"}
+                ]
+            }
+        },
+        "Route" : {
+            "Type" : "AWS::EC2::Route",
+            "DependsOn" : "InternetGateway",
+            "Properties" : {
+               "RouteTableId" : { "Ref" : "RouteTable" },
+               "DestinationCidrBlock" : "0.0.0.0/0",
+               "GatewayId" : { "Ref" : "InternetGateway" }
+            }
+        },
+        "SubnetRouteTableAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "SubnetId" : { "Ref" : "PublicSubnet" },
+                "RouteTableId" : { "Ref" : "RouteTable" }
+            }
+        },
+        "SecurityGroup01": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable SSH and Web access via port 22 and 8080",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "8080",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "Tags" : [
+                    { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    { "Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_SecuirtyGroup"}
+                ]
+            }
+        },
+        "JenkinsEc2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": "vvp_ansibleassessment",
+                "ImageId": "ami-13a8a769",
+                "InstanceType": "t2.micro",
+                "Monitoring": "true",
+                "NetworkInterfaces" : [
+                    { 
+                        "DeviceIndex":"0",
+                        "AssociatePublicIpAddress" : "true",
+                        "DeleteOnTermination" : "true",
+                        "SubnetId" : { "Ref" : "PublicSubnet" },
+                        "GroupSet": [
+                            {
+                                "Ref": "SecurityGroup01"
+                            }
+                        ]
+                    }
+                ],
+                "Tags": [
+                    { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    { "Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_VVPJenkinsInstance"}
+                ],                
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -ex"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "JenkinsUrl": {
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "http://",
+                        {
+                            "Fn::GetAtt": [
+                                "JenkinsEc2Instance",
+                                "PublicIp"
+                            ]
+                        },
+                        ":8080"
+                    ]
+                ]
+            }
+        }
+    }
+}

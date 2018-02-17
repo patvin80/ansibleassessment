@@ -1,0 +1,7 @@
+# SSH To the Jenkins AMI
+
+# Local Macbook setup
+ssh-agent bash 
+cp vvp_ansibleassessment.pem ~/.ssh/
+chmod 400 ~/.ssh/vvp_ansibleassessment.pem
+ssh-add ~/.ssh/vvp_ansibleassessment.pem

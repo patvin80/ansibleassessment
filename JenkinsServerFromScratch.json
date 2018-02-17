@@ -1,0 +1,189 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Instantiates the EC2 instance with Jenkins based upon Bitnami AMI",
+    "Metadata": {
+
+    },
+    "Parameters": {
+        
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+        "VPC" : {
+            "Type" : "AWS::EC2::VPC",
+            "Properties" : {
+              "CidrBlock" : "10.0.0.0/16",
+              "Tags" : [
+                { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                { "Key": "Name", "Value": "Project_VPC"},
+                { "Key" : "Network", "Value" : "Public" }
+              ]
+            }
+        },
+        "PublicSubnet" : {
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "VpcId" : { "Ref" : "VPC" },
+                "CidrBlock" : "10.0.0.0/24",
+                "MapPublicIpOnLaunch": "true",
+                "Tags" : [
+                    {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    {"Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_Public_Subnet"}
+                ]
+            }
+        },
+        "InternetGateway" : {
+            "Type" : "AWS::EC2::InternetGateway",
+            "Properties" : {
+              "Tags" : [
+                { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                { "Key" : "Network", "Value" : "Public" },
+                { "Key": "Name", "Value": "Project_Internetgateway"}
+              ]
+            }
+          },
+        "AttachGateway" : {
+             "Type" : "AWS::EC2::VPCGatewayAttachment",
+             "Properties" : {
+                "VpcId" : { "Ref" : "VPC" },
+                "InternetGatewayId" : { "Ref" : "InternetGateway" }
+                }
+        },
+        "RouteTable" : {
+            "Type" : "AWS::EC2::RouteTable",
+            "Properties" : {
+                "VpcId" : { "Ref" : "VPC" },
+                "Tags" : [
+                    { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    { "Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_RouteTable"}
+                ]
+            }
+        },
+        "Route" : {
+            "Type" : "AWS::EC2::Route",
+            "DependsOn" : "InternetGateway",
+            "Properties" : {
+               "RouteTableId" : { "Ref" : "RouteTable" },
+               "DestinationCidrBlock" : "0.0.0.0/0",
+               "GatewayId" : { "Ref" : "InternetGateway" }
+            }
+        },
+        "SubnetRouteTableAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "SubnetId" : { "Ref" : "PublicSubnet" },
+                "RouteTableId" : { "Ref" : "RouteTable" }
+            }
+        },        
+        "SecurityGroup01": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable SSH and Web access via port 22 and 8080",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "80",
+                        "ToPort": "8080",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "Tags" : [
+                    { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    { "Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_SecuirtyGroup"}
+                ]
+            }
+        },
+        "JenkinsEc2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": "vvp_ansibleassessment",
+                "ImageId": "ami-66506c1c",
+                "InstanceType": "t2.micro",
+                "Monitoring": "true",
+                "NetworkInterfaces" : [
+                    { 
+                        "DeviceIndex":"0",
+                        "AssociatePublicIpAddress" : "true",
+                        "DeleteOnTermination" : "true",
+                        "SubnetId" : { "Ref" : "PublicSubnet" },
+                        "GroupSet": [
+                            {
+                                "Ref": "SecurityGroup01"
+                            }
+                        ]
+                    }
+                ],
+                "Tags": [
+                    { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                    { "Key" : "Network", "Value" : "Public" },
+                    { "Key": "Name", "Value": "Project_VVPJenkinsInstance"}
+                ],                
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -ex ",
+                                "# resources ",
+                                "jenkins_module_src='https://raw.github.com/rdegges/puppet-jenkins/master/manifests/init.pp' ",
+                                "# puppet locations ",
+                                "manifests='/etc/puppet/manifests' ",
+                                "site_pp='$manifests/site.pp' ",
+                                "manifests_jenkins='$manifests/jenkins/manifests' ",
+                                "jenkins_init_pp='$manifests_jenkins/init.pp' ",
+                                "# ensure apt-get operations are noninteractive ",
+                                "export DEBIAN_FRONTEND=noninteractive ",
+                                "# update and upgrade the system ",
+                                "apt-get -y update && apt-get -y upgrade ",
+                                "# install puppet and git ",
+                                "apt-get -y install git puppet ",
+                                "# create puppet config ",
+                                "mkdir -p $manifests_jenkins ",
+                                "curl $jenkins_module_src > $jenkins_init_pp ",
+                                "echo 'include jenkins' > $site_pp ",
+                                "# run puppet in standalone mode ",
+                                "puppet apply $site_pp "
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "JenkinsUrl": {
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "http://",
+                        {
+                            "Fn::GetAtt": [
+                                "JenkinsEc2Instance",
+                                "PublicIp"
+                            ]
+                        },
+                        ":8080"
+                    ]
+                ]
+            }
+        }
+    }
+}
