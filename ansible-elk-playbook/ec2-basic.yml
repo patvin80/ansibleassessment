@@ -40,18 +40,20 @@
           rules_egress:
             - proto: all
               cidr_ip: 0.0.0.0/0
-        register: security_group
+        register: secgrp
 
-      - name: Launch the new EC2 Instance
-        local_action: ec2 
-                      vpc_subnet_id = {{ vpc_subnet }}
-                      group_id= {{ security_group.group_id }} 
-                      instance_type={{ instance_type}} 
-                      image={{ image }} 
-                      wait=true 
-                      region={{ region }} 
-                      keypair={{ keypair }}
-                      count={{count}}
+      - name: "Provision an EC2 instance"
+        ec2:
+          key_name: "{{ keypair }}"
+          group_id: "{{ secgrp.group_id }}"
+          instance_type: "{{ instance_type }}"
+          ec2_region: "{{ region }}"
+          image: "{{ image }}"
+          wait: true
+          count: 1
+          instance_tags:
+            tool: "ansible"
+            env: "test"
         register: ec2
 
       - name: Add the newly created EC2 instance(s) to the local host group (located inside the directory)
