@@ -40,11 +40,12 @@
           rules_egress:
             - proto: all
               cidr_ip: 0.0.0.0/0
-        register: secgrp
+        register: security_group
 
       - name: Launch the new EC2 Instance
         local_action: ec2 
-                      group_id= {{ secgrp.group_id }} 
+                      vpc_subnet_id = {{ vpc_subnet }}
+                      group_id= {{ security_group.group_id }} 
                       instance_type={{ instance_type}} 
                       image={{ image }} 
                       wait=true 
