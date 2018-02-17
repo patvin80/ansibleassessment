@@ -1,7 +1,7 @@
 # Efforts Outline
 
 ## Infrastructure Assets:
-1. Jenkins Installed Server - EC2 Instance using the AMI from Bitnami - AMI ID: <s>ami-3e241844</s> ami-13a8a769
+1. Jenkins Installed Server - EC2 Instance using the AMI from Bitnami - AMI ID: <s>ami-3e241844</s> <s>ami-13a8a769</s> 
 2. Sample EC2 Instance created using Ansible to understand infra provisioning using Ansible
 3. ELK Server provisioned at 10.0.0.25
 4. AMI Created with Jenkins and Ansible configured - vvp-ansible-jenkins
@@ -10,8 +10,8 @@
 1. Cloud Formation Template - Jenkins Creation
 2. SH file to back and create an AMI
 3. Ansible Installation Script 
-4. Ansible Playbook - EC2 Instance provisioning
-5. Ansible Playbook - ELK Stack Provisioning
+4. Ansible Playbook - EC2 Instance provisioning [5]
+5. Ansible Playbook - ELK Stack Provisioning [2], [3]
 6. Cloud Formation Template to provision based upon vvp-ansible-jenkins
 
 ## Steps:
@@ -31,3 +31,4 @@
 [2]: https://qbox.io/blog/deploying-elk-stack-ansible-elasticsearch-kibana-logstash
 [3]: https://logz.io/blog/elk-stack-ansible/
 [4]: https://github.com/sadsfae/ansible-elk
+[5]: https://www.agix.com.au/build-an-ec2-using-ansible-step-by-step/

@@ -114,7 +114,7 @@
             "Type": "AWS::EC2::Instance",
             "Properties": {
                 "KeyName": "vvp_ansibleassessment",
-                "ImageId": "ami-66506c1c",
+                "ImageId": "ami-97785bed",
                 "InstanceType": "t2.micro",
                 "Monitoring": "true",
                 "NetworkInterfaces" : [
@@ -140,26 +140,10 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -ex ",
-                                "# resources ",
-                                "jenkins_module_src='https://raw.github.com/rdegges/puppet-jenkins/master/manifests/init.pp' ",
-                                "# puppet locations ",
-                                "manifests='/etc/puppet/manifests' ",
-                                "site_pp='$manifests/site.pp' ",
-                                "manifests_jenkins='$manifests/jenkins/manifests' ",
-                                "jenkins_init_pp='$manifests_jenkins/init.pp' ",
-                                "# ensure apt-get operations are noninteractive ",
-                                "export DEBIAN_FRONTEND=noninteractive ",
-                                "# update and upgrade the system ",
-                                "apt-get -y update && apt-get -y upgrade ",
-                                "# install puppet and git ",
-                                "apt-get -y install git puppet ",
-                                "# create puppet config ",
-                                "mkdir -p $manifests_jenkins ",
-                                "curl $jenkins_module_src > $jenkins_init_pp ",
-                                "echo 'include jenkins' > $site_pp ",
-                                "# run puppet in standalone mode ",
-                                "puppet apply $site_pp "
+                                "#!/bin/bash -xe\n",
+                                "git clone https://github.com/patvin80/ansibleassessment.git\n",
+                                "sudo yum -y update\n",
+                                "sudo yum install -y git nginx java-1.8.0-openjdk-devel aws-cli\n"
                             ]
                         ]
                     }
