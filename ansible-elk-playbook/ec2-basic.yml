@@ -13,7 +13,7 @@
       region: us-east-1 # Change the Region
       count: 1
       vpc_subnet: subnet-f43c76db
-
+      vpcid: vpc-7768ab0c
     # Task that will be used to Launch/Create an EC2 Instance
     tasks:
 
@@ -23,6 +23,7 @@
           name: "{{ security_group }}"
           description: Security Group for webserver Servers
           region: "{{ region }}"
+          vpc_id: "{{ vpcid }}"
           rules:
             - proto: tcp
               from_port: 22
