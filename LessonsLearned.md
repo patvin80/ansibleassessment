@@ -18,6 +18,7 @@ Error was related to default VPC is not configured for the user.
 ## Ansible
 1. Install Ansible Instructions on Ubuntu [1]
 2. Install Ansible Instructions on Linux AMI [3]
+3. Passing variables to Ansible Commands [4]
 
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
@@ -25,3 +26,4 @@ Error was related to default VPC is not configured for the user.
 [1]: https://gist.github.com/afternoon/3837048
 [2]: https://www.codeengine.com/articles/install-jenkins-on-amazon-linux/
 [3]: https://cloudacademy.com/blog/get-started-with-ansible-on-the-cloud/
+[4]: https://stackoverflow.com/questions/30662069/how-can-i-pass-variable-to-ansible-playbook-in-the-command-line
