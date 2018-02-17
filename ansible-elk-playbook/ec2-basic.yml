@@ -44,7 +44,6 @@
 
       - name: Launch the new EC2 Instance
         local_action: ec2 
-                      vpc_subnet_id = {{ vpc_subnet }}
                       group= {{ security_group }} 
                       instance_type={{ instance_type}} 
                       image={{ image }} 
