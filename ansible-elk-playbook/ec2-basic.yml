@@ -55,18 +55,16 @@
           instance_tags:
             tool: "ansible"
             env: "test"
-            name: "AnsibleEC2Instance"
+            Name: "AnsibleEC2Instance"
         register: ec2_info
 
       - name: Debug ec2_info.instances public_ip
         debug: var=ec2_info.instances[0].public_ip
 
-      # - name: Add the newly created EC2 instance(s) to the local host group (located inside the directory)
-      #   local_action: lineinfile 
-      #                 dest="./hosts" 
-      #                 regexp={{ item.public_ip }} 
-      #                 insertafter="[webserver]" line={{ item.public_ip }}
-      #   with_items: ec2.instances
+      - name: Add the newly created EC2 instance(s) to the local host group (located inside the directory)
+        local_action: lineinfile 
+                      dest="./hosts" 
+                      insertafter="[webserver]" line={{ ec2_info.instances[0].public_ip }}
 
       # - name: Wait for SSH to come up
       #   local_action: wait_for 
