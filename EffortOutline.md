@@ -10,7 +10,7 @@
 1. Cloud Formation Template - Jenkins Creation
 2. SH file to back and create an AMI
 3. Ansible Installation Script 
-4. Ansible Playbook - EC2 Instance provisioning [5]
+4. Ansible Playbook - EC2 Instance provisioning [5][6]
 5. Ansible Playbook - ELK Stack Provisioning [2], [3]
 6. Cloud Formation Template to provision based upon vvp-ansible-jenkins
 
@@ -32,3 +32,4 @@
 [3]: https://logz.io/blog/elk-stack-ansible/
 [4]: https://github.com/sadsfae/ansible-elk
 [5]: https://www.agix.com.au/build-an-ec2-using-ansible-step-by-step/
+[6]: https://blog.scottlowe.org/2016/10/23/managing-aws-infrastructure-ansible/

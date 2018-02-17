@@ -40,11 +40,11 @@
           rules_egress:
             - proto: all
               cidr_ip: 0.0.0.0/0
-        register: basic_firewall
+        register: secgrp
 
       - name: Launch the new EC2 Instance
         local_action: ec2 
-                      group= {{ security_group }} 
+                      group_id= {{ secgrp.group_id }} 
                       instance_type={{ instance_type}} 
                       image={{ image }} 
                       wait=true 
