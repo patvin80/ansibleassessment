@@ -20,6 +20,12 @@ Error was related to default VPC is not configured for the user.
 2. Install Ansible Instructions on Linux AMI [3]
 3. Passing variables to Ansible Commands [4]
 
+## Jenkins
+1. Jenkins CLI Setup [5]
+2. Jenkins CLI Authentication [5]
+3. Install Ansible Plugin for Jenkins [6]
+4. Setting up Path Variables in Jenkins [7]
+
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
 
@@ -27,3 +33,6 @@ Error was related to default VPC is not configured for the user.
 [2]: https://www.codeengine.com/articles/install-jenkins-on-amazon-linux/
 [3]: https://cloudacademy.com/blog/get-started-with-ansible-on-the-cloud/
 [4]: https://stackoverflow.com/questions/30662069/how-can-i-pass-variable-to-ansible-playbook-in-the-command-line
+[5]: https://isignal.github.io/notes/jenkins-cli.html
+[6]: https://wiki.jenkins.io/display/JENKINS/Ansible+Plugin
+[7]: https://stackoverflow.com/questions/36473479/how-to-set-the-path-environment-variable-in-jenkins-configuration-on-windows/36502958
