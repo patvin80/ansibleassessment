@@ -1,0 +1,6 @@
+ansible all -m ping
+# Was able to successfully create an EC2 Instance using Ansible.
+# Created Hosts file and ec2-Basic.yml file
+ansible-playbook -i ./hosts ./ec2-basic.yml 
+
+# Creating a Jenkins Job for the same is still in progress.

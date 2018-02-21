@@ -1,0 +1,14 @@
+# To build the docker image
+docker-compose build
+
+# To Run the Docker image
+docker-compose up
+
+# To connect to the Docker Shell in the Instance
+docker exec -it example_jenkins_1 bash
+
+curl --silent --show-error http://user:c578bb87cc300d10ec560f6ba429a8e6@localhost/jenkins/job/GetStartedJob/build
+
+curl -s -XPOST 'http://localhost/jenkins/createItem?name=JobCreate2' -u user:c578bb87cc300d10ec560f6ba429a8e6 --data-binary @config.xml -H "Content-Type:text/xml"
+
+curl -u user:bitnami http://localhost/jenkins/job/GetStartedJob/build?token=1111
