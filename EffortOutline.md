@@ -21,7 +21,7 @@
 4. Create an Ansible Play book to provision an EC2 Server with Apache - 02/17/2018
 5. Create a Jenkins Job to execute the EC2 Provisioning - 02/17/2018
 5. Sub Deliverable complete
-6. Review the script here [2][3] - 02/19/2018
+6. Review the script here [2][3][7] - 02/19/2018
 7. Set it up on the Jenkins Server - 02/20/2018
 8. Validate the script - 02/21/2018
 9. Package the Jenkins Server as an AMI - 02/22/2018
@@ -33,3 +33,4 @@
 [4]: https://github.com/sadsfae/ansible-elk
 [5]: https://www.agix.com.au/build-an-ec2-using-ansible-step-by-step/
 [6]: https://blog.scottlowe.org/2016/10/23/managing-aws-infrastructure-ansible/
+[7]: https://github.com/inonit/ansible-elk

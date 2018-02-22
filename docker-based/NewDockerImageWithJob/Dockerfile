@@ -1,3 +1,3 @@
-FROM vinkar/jenkinsimage:latest
+FROM vinkar/jenkins:latest
 
 # CMD ansible --version

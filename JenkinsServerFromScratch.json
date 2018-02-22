@@ -5,6 +5,11 @@
 
     },
     "Parameters": {
+        "KeyValueParameter" : {
+            "Type" : "String",
+            "Default" : "WitDevEnvironment",
+            "Description" : "Enter a value for the Key Pair"
+        }
         
     },
     "Mappings": {
@@ -113,7 +118,7 @@
         "JenkinsEc2Instance": {
             "Type": "AWS::EC2::Instance",
             "Properties": {
-                "KeyName": "vvp_ansibleassessment",
+                "KeyName": { "Ref" : "KeyValueParameter" },
                 "ImageId": "ami-97785bed",
                 "InstanceType": "t2.micro",
                 "Monitoring": "true",
@@ -140,10 +145,23 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -xe\n",
+                                "#! /bin/bash\n",
+                                "yum -y update\n",
+                                "yum install -y docker git\n",
+                                "sudo service docker start\n",
+                                "cd /home/ec2-user\n",
                                 "git clone https://github.com/patvin80/ansibleassessment.git\n",
-                                "sudo yum -y update\n",
-                                "sudo yum install -y git nginx java-1.8.0-openjdk-devel aws-cli\n"
+                                "sudo curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose\n",
+                                "sudo chmod +x /usr/local/bin/docker-compose\n",
+                                "cd /home/ec2-user/ansibleassessment/docker-based/Example\n",
+                                "sudo usermod -aG docker $USER\n",
+                                "sudo service docker restart\n",
+                                "docker-compose build\n",
+                                "docker-compose up -d\n",
+                                "sleep 5m\n",
+                                "api = curl -u user:bitnami --silent --show-error http://localhost/jenkins/user/user/configure | grep 'id=\"apiToken\"' | awk -F'\"' '{print $148}'\n",
+                                "curl -s -XPOST 'http://localhost/jenkins/createItem?name=GetStartedJob' -u user:${api} --data-binary @config.xml -H 'Content-Type:text/xml'\n"
+
                             ]
                         ]
                     }

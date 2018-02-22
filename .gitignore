@@ -1,3 +1,4 @@
 vvp_ansibleassessment.pem
 installations/AccessKeyAndSecretSetup.txt
 installations/configureInstance.sh
+docker-based/Example/WitDevEnvironment.pem

@@ -9,22 +9,26 @@ Error was related to default VPC is not configured for the user.
 5. Jenkins Server from scratch based upon Ubuntu Image - [1] ami-5a19976a -- Did not work
 6. Community AMI Jenkins ami-5cb48d4b - Did not work
 7. Created an Linux AMI and followed instructions here [2]
+8. Checking the logs of the User Data execution found here in /var/log/cloud-init.log
 
 ## Challenges or Blockages:
 1. At this point I have the Linux AMI setup with Jenkins, however I need to override the password. One option I am considering is to do a Post on the Admin URL by reading the file at sudo vi /var/lib/jenkins/secrets/initialAdminPassword.
 2. User does not have capabilities to create AMIs which means that I cannot set up the jobs using the screen and then back up the AMI and use that for CloudFormation. - Question to Mike if this can be changed.
 3. More trouble as the newly created VPC is not a DefaultVPC I need to figure out a way to set this to some value so that the EC2 instance Ansible tutorial will work.
+4. Path variable on the Jenkins server is not able to recognize ansible-playbook. Tried [5], but looks like the path is set correctly but may be Jenkins does not have the permissions to invoke ansible-playbook.
 
 ## Ansible
 1. Install Ansible Instructions on Ubuntu [1]
 2. Install Ansible Instructions on Linux AMI [3]
 3. Passing variables to Ansible Commands [4]
+4. Using the template here [8]. Fixed the yml files which looked like JSON using the tool here [9]
 
 ## Jenkins
 1. Jenkins CLI Setup [5]
 2. Jenkins CLI Authentication [5]
 3. Install Ansible Plugin for Jenkins [6]
 4. Setting up Path Variables in Jenkins [7]
+5. Getting the value of the Jenkins API Key [10]
 
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
@@ -36,3 +40,6 @@ Error was related to default VPC is not configured for the user.
 [5]: https://isignal.github.io/notes/jenkins-cli.html
 [6]: https://wiki.jenkins.io/display/JENKINS/Ansible+Plugin
 [7]: https://stackoverflow.com/questions/36473479/how-to-set-the-path-environment-variable-in-jenkins-configuration-on-windows/36502958
+[8]: https://github.com/inonit/ansible-elk
+[9]: https://www.json2yaml.com/
+[10]: https://stackoverflow.com/questions/11523809/how-can-i-extract-a-tags-attribute-value-from-an-html-file

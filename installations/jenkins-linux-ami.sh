@@ -16,7 +16,6 @@ curl http://localhost:8080/user/Candidate-J5PaTIItaB/configure
 # Has several manual steps.
 echo 'Candidate-J5PaTIItaB:897888b883355e3f009ebdad20f3103c' > jenkins_secret 
 java -jar ./jenkins-cli.jar -s http://localhost:8080 -auth @jenkins_secret who-am-i
-
 java -jar ./jenkins-cli.jar -s http://localhost:8080 -auth @jenkins_secret list-jobs
 
 # At this point I have the Linux AMI setup with Jenkins, however I need to override the password.

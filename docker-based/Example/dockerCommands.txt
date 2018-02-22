@@ -12,3 +12,11 @@ curl --silent --show-error http://user:c578bb87cc300d10ec560f6ba429a8e6@localhos
 curl -s -XPOST 'http://localhost/jenkins/createItem?name=JobCreate2' -u user:c578bb87cc300d10ec560f6ba429a8e6 --data-binary @config.xml -H "Content-Type:text/xml"
 
 curl -u user:bitnami http://localhost/jenkins/job/GetStartedJob/build?token=1111
+
+curl -u user:bitnami --silent --show-error http://34.230.90.226/jenkins/user/user/configure
+
+# Getting the API key value:
+curl -u user:bitnami --silent --show-error http://localhost/jenkins/user/user/configure | grep 'id=\"apiToken\"' | awk -F'\"' '{print $148}'
+
+New Key which was made availbale
+5064fd805b96a44bf6dab21e0616260d
