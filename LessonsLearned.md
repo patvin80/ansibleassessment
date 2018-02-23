@@ -10,6 +10,7 @@ Error was related to default VPC is not configured for the user.
 6. Community AMI Jenkins ami-5cb48d4b - Did not work
 7. Created an Linux AMI and followed instructions here [2]
 8. Checking the logs of the User Data execution found here in /var/log/cloud-init.log
+9. Dependency on the .pem file and having it in a publilc repository is risky. Can be overcome by using the S3 location for the key?
 
 ## Challenges or Blockages:
 1. At this point I have the Linux AMI setup with Jenkins, however I need to override the password. One option I am considering is to do a Post on the Admin URL by reading the file at sudo vi /var/lib/jenkins/secrets/initialAdminPassword.

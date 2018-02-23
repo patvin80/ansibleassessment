@@ -19,11 +19,11 @@ RUN mkdir /ansible-elk
 COPY ./ansible-elk /ansible-elk
 
 RUN mkdir ~/.ssh
-COPY ./WitDevEnvironment.pem ~/.ssh
-COPY ./WitDevEnvironment.pem /ansible-elk
+COPY ./vinkar_CEP.pem ~/.ssh
+COPY ./vinkar_CEP.pem /ansible-elk
 
 ENV AWS_ACCESS_KEY_ID="XXXX" 
-ENV AWS_SECRET_ACCESS_KEY="XXXXX"
+ENV AWS_SECRET_ACCESS_KEY="XXXX"
 ENV ANSIBLE_HOST_KEY_CHECKING=False
 
 # CMD ansible --version
