@@ -1,0 +1,5 @@
+---
+
+- include: logstash.yml
+- include: logstash-forwarder.yml
+

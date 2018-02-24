@@ -1,0 +1,51 @@
+---
+
+- name: Add Elasticsearch repository public key
+  apt_key: url={{ elasticsearch.public_key }}
+  tags:
+    - elasticsearch
+
+- name: Add Elasticsearch repository
+  apt_repository: repo={{ elasticsearch.repository }} state=present
+  tags:
+    - elasticsearch
+
+- name: Install Elasticsearch
+  apt: name=elasticsearch update_cache=yes
+  tags:
+    - elasticsearch
+
+- name: Replace Elasticsearch PID directory
+  lineinfile: dest=/etc/init.d/elasticsearch regexp="PID_DIR\=" line='PID_DIR="/var/run"'
+  tags:
+    - elasticsearch
+
+- name: Register Elasticsearch in init.d
+  command: update-rc.d elasticsearch defaults
+  tags:
+      - elasticsearch
+
+# Update Elasticsearch config file to allow access (to secure Elasticsearch, bind to 'localhost'). 
+
+- name: Updating the config file to allow outside access
+  tags:
+      - elasticsearch
+  lineinfile:
+   destfile: /etc/elasticsearch/elasticsearch.yml
+   regexp: 'network.host:'
+   line: 'network.host: 0.0.0.0'
+ 
+# Update Elasticsearch port in config file 
+
+- name: Updating the port in config file
+  tags:
+      - elasticsearch 
+  lineinfile:
+   destfile: /etc/elasticsearch/elasticsearch.yml
+   regexp: 'http.port:'
+   line: 'http.port: 9200'
+ 
+- name: Enable and start Elasticsearch
+  service: name=elasticsearch enabled=yes state=started
+  tags:
+    - elasticsearch
