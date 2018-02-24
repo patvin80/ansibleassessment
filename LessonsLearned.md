@@ -30,6 +30,11 @@ Error was related to default VPC is not configured for the user.
 4. Setting up Path Variables in Jenkins [7]
 5. Getting the value of the Jenkins API Key [10]
 
+## ELK Stack
+1. Kibana Configuration File is kibana.yml - /etc/kibana/kibana.yml
+2. Elasticsearch Configuration File is elacticsearch.yml - /etc/elasticsearch/elasticsearch.yml
+3. Kibana Instructions for apt-get involve updating the apt repository [11]
+
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
 
@@ -43,3 +48,4 @@ Error was related to default VPC is not configured for the user.
 [8]: https://github.com/inonit/ansible-elk
 [9]: https://www.json2yaml.com/
 [10]: https://stackoverflow.com/questions/11523809/how-can-i-extract-a-tags-attribute-value-from-an-html-file
+[11]: https://www.elastic.co/guide/en/kibana/current/deb.html
