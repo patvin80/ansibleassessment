@@ -2,3 +2,4 @@ vvp_ansibleassessment.pem
 installations/AccessKeyAndSecretSetup.txt
 installations/configureInstance.sh
 docker-based/Example/WitDevEnvironment.pem
+docker-based/Example/vinkar_CEP.pem
