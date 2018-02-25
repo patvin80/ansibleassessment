@@ -16,6 +16,18 @@
       vpcid: vpc-7768ab0c
     # Task that will be used to Launch/Create an EC2 Instance
     tasks:
+      - name: Create an EC2 key
+        ec2_key:
+          name: "mykey"
+          region: "{{ region }}"
+        register: ec2_key
+
+      - name: save private key
+        copy:
+          content: "{{ ec2_key.key.private_key }}" 
+          dest: "./aws-private.pem" 
+          mode: 0600
+        when: ec2_key.changed
 
       - name: Create a security group
         local_action: 
@@ -63,7 +75,7 @@
         local_action: lineinfile 
                       dest="./hosts" 
                       insertafter="[webserver]" 
-                      line={{ ec2_info.instances[0].public_ip }}
+                      line="{{ ec2_info.instances[0].public_ip }} ansible_ssh_private_key_file=./aws-private.pem"
 
       - name: Save private key
         copy: content="{{keypair}}" dest="../{{keypair}}.pem" mode=0400

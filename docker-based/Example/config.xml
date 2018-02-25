@@ -21,10 +21,11 @@
         cd /ansible-elk-playbook
         echo pwd
         export HOME=/home/`whoami`
-        #ansible-playbook -i ./hosts ./ec2-noVPC.yml
-        vpcid=$(aws ec2 describe-vpcs --region us-east-1 --filter Name=tag-value,Values="Project_VPC" --query 'Vpcs[*].VpcId' --output text)
-        subnetid=$(aws ec2 describe-subnets --region us-east-1 --filters "Name=vpc-id,Values=$vpcid" --query 'Subnets[*].SubnetId' --output text)
-        ansible-playbook -i ./hosts ec2-basic.yml --extra-vars "vpcid=$vpcid vpc_subnet=$subnetid"
+        ansible-playbook -i ./hosts ./ec2-noVPC.yml --tags "provisioning"
+        ansible-playbook -i ./hosts ./ec2-noVPC.yml --tags "vinkar"
+        #vpcid=$(aws ec2 describe-vpcs --region us-east-1 --filter Name=tag-value,Values="Project_VPC" --query 'Vpcs[*].VpcId' --output text)
+        #subnetid=$(aws ec2 describe-subnets --region us-east-1 --filters "Name=vpc-id,Values=$vpcid" --query 'Subnets[*].SubnetId' --output text)
+        #ansible-playbook -i ./hosts ec2-basic.yml --extra-vars "vpcid=$vpcid vpc_subnet=$subnetid"
         #ansible-playbook -i hosts --tags "setup" ec2.yml --extra-vars "vpcid=$vpcid vpc_subnet=$subnetid"
         #ansible-playbook -i hosts --tags "vinkar" ec2.yml
         #ansible-playbook -i hosts --tags "provision" ec2.yml
