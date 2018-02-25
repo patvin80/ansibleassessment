@@ -17,6 +17,7 @@ Error was related to default VPC is not configured for the user.
 2. User does not have capabilities to create AMIs which means that I cannot set up the jobs using the screen and then back up the AMI and use that for CloudFormation. - Question to Mike if this can be changed.
 3. More trouble as the newly created VPC is not a DefaultVPC I need to figure out a way to set this to some value so that the EC2 instance Ansible tutorial will work.
 4. Path variable on the Jenkins server is not able to recognize ansible-playbook. Tried [5], but looks like the path is set correctly but may be Jenkins does not have the permissions to invoke ansible-playbook.
+5. Looks like the keys and PEM file need to be in the source control for this solution to work.
 
 ## Ansible
 1. Install Ansible Instructions on Ubuntu [1]

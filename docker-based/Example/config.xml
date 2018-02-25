@@ -17,9 +17,14 @@
 </command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
-      <command>cd /ansible-elk-playbook
+      <command>cd /ansible-elk-revised
 echo pwd
-ansible-playbook -i ./hosts ./ec2-noVPC.yml</command>
+export HOME=/home/$USER
+vpcid=$(aws ec2 describe-vpcs --query 'Vpcs[*].VpcId' --output text)
+subnetid=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$vpcid")
+ansible-playbook -i hosts --tags "setup" ec2.yml --extra-vars "vpcid=$vpcid vpc_subnet=$subnetid"
+ansible-playbook -i hosts --tags "vinkar" ec2.yml
+ansible-playbook -i hosts --tags "provision" ec2.yml</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>

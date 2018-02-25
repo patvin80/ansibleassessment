@@ -1,35 +1,32 @@
 ---
+#
+# Installing Elasticsearch
+#
 
-- name: Add Elasticsearch repository public key
-  apt_key: url={{ elasticsearch.public_key }}
-  tags:
-    - elasticsearch
+# Add Elasticsearch apt key
 
-- name: Add Elasticsearch repository
-  apt_repository: repo={{ elasticsearch.repository }} state=present
-  tags:
-    - elasticsearch
+- name: Add Elasticsearch apt key
+  apt_key:
+   url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+   state: present
+
+# Add the Elasticsearch apt repo. For versions 6 of the stack - use '6.x-prerelease':
+
+- name: Adding Elasticsearch repo
+  apt_repository:
+   repo: deb https://artifacts.elastic.co/packages/6.x/apt stable main
+   state: present
+
+# Installing Elasticsearch
 
 - name: Install Elasticsearch
-  apt: name=elasticsearch update_cache=yes
-  tags:
-    - elasticsearch
-
-- name: Replace Elasticsearch PID directory
-  lineinfile: dest=/etc/init.d/elasticsearch regexp="PID_DIR\=" line='PID_DIR="/var/run"'
-  tags:
-    - elasticsearch
-
-- name: Register Elasticsearch in init.d
-  command: update-rc.d elasticsearch defaults
-  tags:
-      - elasticsearch
-
+  apt:
+   name: elasticsearch
+   update_cache: yes
+   
 # Update Elasticsearch config file to allow access (to secure Elasticsearch, bind to 'localhost'). 
 
 - name: Updating the config file to allow outside access
-  tags:
-      - elasticsearch
   lineinfile:
    destfile: /etc/elasticsearch/elasticsearch.yml
    regexp: 'network.host:'
@@ -37,15 +34,27 @@
  
 # Update Elasticsearch port in config file 
 
-- name: Updating the port in config file
-  tags:
-      - elasticsearch 
+- name: Updating the port in config file 
   lineinfile:
    destfile: /etc/elasticsearch/elasticsearch.yml
    regexp: 'http.port:'
    line: 'http.port: 9200'
+
+- name: Updating the memory requirements in jvmoptions file 
+  lineinfile:
+   destfile: /etc/elasticsearch/jvm.options
+   regexp: '-Xms1g'
+   line: '-Xms150m'
+
+- name: Updating the max memory requirements in jvmoptions file 
+  lineinfile:
+   destfile: /etc/elasticsearch/jvm.options
+   regexp: '-Xmx1g'
+   line: '-Xmx200m'
  
-- name: Enable and start Elasticsearch
-  service: name=elasticsearch enabled=yes state=started
-  tags:
-    - elasticsearch
+# Start Elasticsearch
+- name: Starting Elasticsearch
+  service:
+   name: elasticsearch
+   state: started
+    

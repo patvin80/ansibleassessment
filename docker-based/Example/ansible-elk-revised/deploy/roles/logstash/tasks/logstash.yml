@@ -51,10 +51,10 @@
   with_items:
     - patterns/nginx
 
-- name: Register Logstash in init.d
-  command: update-rc.d logstash defaults
-  tags:
-    - logstash
+# - name: Register Logstash in init.d
+#   command: update-rc.d logstash defaults
+#   tags:
+#     - logstash
 
 - name: Enable and start Logstash Server
   service: name=logstash enabled=yes state=started
