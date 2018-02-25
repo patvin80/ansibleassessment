@@ -9,7 +9,7 @@
       instance_type: t2.micro
       security_group: ansible-webserver # Change the security group name here
       image: ami-97785bed # This is an AMI i created myself
-      keypair: vvp_ansibleassessment # This is one of my keys that i already have in AWS
+      keypair: vinkar_CEP # This is one of my keys that i already have in AWS
       region: us-east-1 # Change the Region
       count: 1
       vpc_subnet: subnet-f43c76db

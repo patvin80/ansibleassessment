@@ -11,6 +11,7 @@ RUN pip install --upgrade pip
 RUN apt-get install -y ansible
 RUN pip install boto3
 RUN pip install boto
+RUN pip install awscli
 
 # Creating the Folder and then granting permissions to the folder so that the Ansible Playbook can then update the hosts file
 RUN mkdir -m 777 /ansible-elk-playbook 

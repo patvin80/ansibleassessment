@@ -11,6 +11,7 @@ Error was related to default VPC is not configured for the user.
 7. Created an Linux AMI and followed instructions here [2]
 8. Checking the logs of the User Data execution found here in /var/log/cloud-init.log
 9. Dependency on the .pem file and having it in a publilc repository is risky. Can be overcome by using the S3 location for the key?
+10. Instace Profile was used to give the newly created instance capabilities to provision the EC2 instances and the docker container actually gets permissions from the host.
 
 ## Challenges or Blockages:
 1. At this point I have the Linux AMI setup with Jenkins, however I need to override the password. One option I am considering is to do a Post on the Admin URL by reading the file at sudo vi /var/lib/jenkins/secrets/initialAdminPassword.
@@ -24,7 +25,11 @@ Error was related to default VPC is not configured for the user.
 1. Install Ansible Instructions on Ubuntu [1]
 2. Install Ansible Instructions on Linux AMI [3]
 3. Passing variables to Ansible Commands [4]
-4. Using the template here [8]. Fixed the yml files which looked like JSON using the tool here [9]
+4. Using the template here [8]. Fixed the yml files which looked like JSON using the tool here [9].
+4.1. Elastic Search version had to be upgraded.
+4.2. Elastic Search configuration had to be change in the main.yml
+4.3. All references to the vars/main.yml removed
+4.4. Kibana installation had to be simplified and any dependencies on the init file and vars folder removed. Now simplified it to just main.yml file based installation.
 
 ## Jenkins
 1. Jenkins CLI Setup [5]
