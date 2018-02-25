@@ -117,6 +117,59 @@
                 ]
             }
         },
+        "EC2AccessInstanceProfile" : {
+            "Type" : "AWS::IAM::InstanceProfile",
+            "Properties" : {
+              "Path" : "/",
+              "Roles" : [
+                {
+                  "Ref" : "EC2FullRole"
+                }
+              ]
+            }
+          },
+          "EC2FullPolicy" : {
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : {
+              "PolicyName" : "Project_EC2FullPolicy",
+              "PolicyDocument" : {
+                "Statement" : [
+                  {
+                    "Effect" : "Allow",
+                    "Action" : [
+                      "ec2:*"
+                    ],
+                    "Resource" : "*"
+                  }
+                ]
+              },
+              "Roles" : [
+                {
+                  "Ref" : "EC2FullRole"
+                }
+              ]
+            }
+          },
+          "EC2FullRole" : {
+            "Type" : "AWS::IAM::Role",
+            "Properties" : {
+              "AssumeRolePolicyDocument": {
+                "Version" : "2012-10-17",
+                "Statement" : [
+                  {
+                    "Effect" : "Allow",
+                    "Principal" : {
+                      "Service" : ["ec2.amazonaws.com"]
+                    },
+                    "Action" : [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Path" : "/"
+            }
+        },
         "JenkinsEc2Instance": {
             "Type": "AWS::EC2::Instance",
             "Properties": {
@@ -162,8 +215,8 @@
                                 "/usr/local/sbin/docker-compose up -d\n",
                                 "sleep 2m\n",
                                 "api=$(curl -u user:bitnami --silent --show-error http://localhost/jenkins/user/user/configure | grep 'id=\"apiToken\"' | awk -F'\"' '{print $148}')\n",
-                                "curl -s -XPOST 'http://localhost/jenkins/createItem?name=GetStartedJob' -u user:$api --data-binary @config.xml -H 'Content-Type:text/xml'\n"
-
+                                "curl -s -XPOST 'http://localhost/jenkins/createItem?name=GetStartedJob' -u user:$api --data-binary @config.xml -H 'Content-Type:text/xml'\n",
+                                "curl -s -XPOST -u user:$api http://localhost/jenkins/job/GetStartedJob/build"
                             ]
                         ]
                     }

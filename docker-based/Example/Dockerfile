@@ -21,13 +21,13 @@ COPY ./ansible-elk /ansible-elk
 RUN mkdir /ansible-elk-revised
 COPY ./ansible-elk-revised /ansible-elk-revised
 
-RUN mkdir ~/.ssh
-COPY ./WitDevEnvironment.pem ~/.ssh
-COPY ./WitDevEnvironment.pem /ansible-elk
-COPY ./WitDevEnvironment.pem /ansible-elk-revised
+# RUN mkdir ~/.ssh
+# COPY ./WitDevEnvironment.pem ~/.ssh
+# COPY ./WitDevEnvironment.pem /ansible-elk
+# COPY ./WitDevEnvironment.pem /ansible-elk-revised
 
-ENV AWS_ACCESS_KEY_ID="XXX" 
-ENV AWS_SECRET_ACCESS_KEY="XXXX"
+# ENV AWS_ACCESS_KEY_ID="XXX" 
+# ENV AWS_SECRET_ACCESS_KEY="XXXX"
 ENV ANSIBLE_HOST_KEY_CHECKING=False
 
 # CMD ansible --version
