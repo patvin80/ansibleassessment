@@ -1,0 +1,85 @@
+---
+
+- name: Launch EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tags: setup
+  vars:
+    keypair: WitDevEnvironment         # Make sure to create this first!
+    instance_type: t2.micro
+    region: us-east-1
+    security_group: default
+    vpc_subnet: subnet-f43c76db
+    vpcid: vpc-7768ab0c
+  tasks:
+    - name: Create an EC2 key
+      ec2_key:
+        name: "{{ keypairName }}-key"
+        region: "{{ region }}"
+      register: ec2_key
+
+    - name: Save private key
+      copy: content="{{ ec2_key.key.private_key }}" dest="../aws-private.pem" mode=0600
+      when: ec2_key.changed
+
+    - name: Launch instance
+      ec2:
+        instance_type: "{{ instance_type }}"
+        region: "{{ region }}"
+        key_name: "{{ keypair }}"
+        group: "{{ security_group }}"
+        image: ami-66506c1c
+        exact_count: 1
+        wait: true
+        count_tag:
+          Name: ELK Server
+        instance_tags:
+          Name: ELK Server
+      register: ec2
+
+    # This would be ideal, but it does not work.
+    # - name: Add all instance public DNS to host group
+    #   add_host: name={{ item.public_dns_name }} groups=ec2hosts
+    #   with_items: ec2.instances
+
+    # Because the above does not work, we need to use this workaround.
+    # This requires us to run the playbook twice, because the host is not
+    # in the hosts file on the first run.
+    - name: Add instance to local host group
+      lineinfile: dest=hosts regexp="{{ item.public_dns_name }}" insertafter="[ec2hosts]" line="{{ item.public_dns_name }} ansible_ssh_private_key_file=/ansible-elk-revised/{{ keypair }}.pem"
+      with_items: ec2.instances
+
+    - name: Register public DNS fact
+      set_fact: public_dns="{{ item.public_dns_name }}"
+      with_items: ec2.instances
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: ec2.instances
+
+- name: Install python 2
+  hosts: ec2hosts
+  remote_user: ubuntu
+  sudo: true
+  gather_facts: false
+  tags: vinkar
+  tasks:
+    - name: Install Python2 using raw
+      raw: sudo apt-get -y install python-simplejson
+
+- name: Provision instance
+  hosts: ec2hosts
+  sudo: true
+  remote_user: "{{ remote_user }}"
+  gather_facts: true
+  tags: provision
+  vars:
+    remote_user: ubuntu
+    fqdn: "{{ inventory_hostname }}"
+  roles:
+    - common
+    - elasticsearch
+    - kibana
+    - logstash
+    - nginx

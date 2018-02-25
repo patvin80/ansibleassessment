@@ -18,11 +18,15 @@ COPY ./ansible-elk-playbook /ansible-elk-playbook
 RUN mkdir /ansible-elk
 COPY ./ansible-elk /ansible-elk
 
-#RUN mkdir ~/.ssh
-#COPY ./vinkar_CEP.pem ~/.ssh
-#COPY ./vinkar_CEP.pem /ansible-elk
+RUN mkdir /ansible-elk-revised
+COPY ./ansible-elk-revised /ansible-elk-revised
 
-ENV AWS_ACCESS_KEY_ID="XXXX" 
+RUN mkdir ~/.ssh
+COPY ./WitDevEnvironment.pem ~/.ssh
+COPY ./WitDevEnvironment.pem /ansible-elk
+COPY ./WitDevEnvironment.pem /ansible-elk-revised
+
+ENV AWS_ACCESS_KEY_ID="XXX" 
 ENV AWS_SECRET_ACCESS_KEY="XXXX"
 ENV ANSIBLE_HOST_KEY_CHECKING=False
 

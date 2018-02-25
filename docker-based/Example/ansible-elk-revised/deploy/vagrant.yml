@@ -1,0 +1,16 @@
+---
+
+- name: Run vagrant development environment
+  hosts: all
+  sudo: yes
+  sudo_user: root
+  remote_user: vagrant
+  vars:
+    - fqdn: elk.local
+    - remote_user: vagrant
+  roles:
+    - common
+    - elasticsearch
+    - kibana
+    - logstash
+    - nginx
