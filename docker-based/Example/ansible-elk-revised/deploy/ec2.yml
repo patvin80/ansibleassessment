@@ -30,6 +30,7 @@
         key_name: "{{ keypair }}"
         group: "{{ security_group }}"
         image: ami-66506c1c
+        vpc_subnet_id: "{{ vpc_subnet }}"
         exact_count: 1
         wait: true
         count_tag:

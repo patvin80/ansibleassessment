@@ -17,36 +17,24 @@
     # Task that will be used to Launch/Create an EC2 Instance
     tasks:
 
-      - name: Create a security group
-        local_action: 
-          module: ec2_group
-          name: "{{ security_group }}"
-          description: Security Group for webserver Servers
+      - name: Create an EC2 key
+        ec2_key:
+          name: "mykey"
           region: "{{ region }}"
-          vpc_id: "{{ vpcid }}"
-          rules:
-            - proto: tcp
-              from_port: 22
-              to_port: 22
-              cidr_ip: 0.0.0.0/0
-            - proto: tcp
-              from_port: 80
-              to_port: 80
-              cidr_ip: 0.0.0.0/0
-            - proto: tcp
-              from_port: 443
-              to_port: 443
-              cidr_ip: 0.0.0.0/0
-          rules_egress:
-            - proto: all
-              cidr_ip: 0.0.0.0/0
-        register: secgrp
+        register: ec2_key
+
+      - name: save private key
+        copy:
+          content: "{{ ec2_key.key.private_key }}" 
+          dest: "./aws-private.pem" 
+          mode: 0600
+        when: ec2_key.changed
 
       - name: "Provision an EC2 instance"
         ec2:
           vpc_subnet_id: "{{ vpc_subnet }}"
           key_name: "{{ keypair }}"
-          group_id: "{{ secgrp.group_id }}"
+          group_id: "{{ security_group }}"
           instance_type: "{{ instance_type }}"
           ec2_region: "{{ region }}"
           image: "{{ image }}"
@@ -65,7 +53,7 @@
         local_action: lineinfile 
                       dest="./hosts" 
                       insertafter="[webserver]" 
-                      line={{ ec2_info.instances[0].public_ip }}
+                      line="{{ ec2_info.instances[0].public_ip }} ansible_ssh_private_key_file=/ansible-elk-revised/{{ keypair }}.pem"
 
       # - name: Wait for SSH to come up
       #   local_action: wait_for 
@@ -80,3 +68,13 @@
       #   args:
       #     tags:
       #       Name: webserver
+
+  - name: Install python 2
+    hosts: ec2hosts
+    remote_user: ubuntu
+    sudo: true
+    gather_facts: false
+    tags: vinkar
+    tasks:
+      - name: Install Python2 using raw
+        raw: sudo apt-get -y install python-simplejson
