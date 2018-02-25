@@ -160,7 +160,7 @@
                                 "sudo service docker restart\n",
                                 "/usr/local/sbin/docker-compose build\n",
                                 "/usr/local/sbin/docker-compose up -d\n",
-                                "sleep 5m\n",
+                                "sleep 2m\n",
                                 "api=$(curl -u user:bitnami --silent --show-error http://localhost/jenkins/user/user/configure | grep 'id=\"apiToken\"' | awk -F'\"' '{print $148}')\n",
                                 "curl -s -XPOST 'http://localhost/jenkins/createItem?name=GetStartedJob' -u user:$api --data-binary @config.xml -H 'Content-Type:text/xml'\n"
 

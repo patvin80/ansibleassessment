@@ -20,3 +20,7 @@ curl -u user:bitnami --silent --show-error http://localhost/jenkins/user/user/co
 
 New Key which was made availbale
 5064fd805b96a44bf6dab21e0616260d
+
+curl -s -XPOST 'http://localhost/jenkins/createItem?name=GetStartedJob' -u user:$api --data-binary @config.xml -H 'Content-Type:text/xml
+
+curl -s -XPOST -u user:$api http://localhost/jenkins/job/GetStartedJob/build

@@ -19,6 +19,7 @@
     <hudson.tasks.Shell>
       <command>cd /ansible-elk-playbook
 echo pwd
+export HOME=/home/`whoami`
 ansible-playbook -i ./hosts ./ec2-noVPC.yml</command>
     </hudson.tasks.Shell>
   </builders>
