@@ -12,13 +12,15 @@ RUN apt-get install -y ansible
 RUN pip install boto3
 RUN pip install boto
 
-RUN mkdir /ansible-elk-playbook 
+# Creating the Folder and then granting permissions to the folder so that the Ansible Playbook can then update the hosts file
+RUN mkdir -m 777 /ansible-elk-playbook 
+RUN chmod tomcat u+w /ansible-elk-playbook
 COPY ./ansible-elk-playbook /ansible-elk-playbook
 
-RUN mkdir /ansible-elk
+RUN mkdir -m 777 /ansible-elk
 COPY ./ansible-elk /ansible-elk
 
-RUN mkdir /ansible-elk-revised
+RUN mkdir -m 777 /ansible-elk-revised
 COPY ./ansible-elk-revised /ansible-elk-revised
 
 # RUN mkdir ~/.ssh

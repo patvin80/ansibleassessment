@@ -177,6 +177,9 @@
                 "ImageId": "ami-97785bed",
                 "InstanceType": "t2.micro",
                 "Monitoring": "true",
+                "IamInstanceProfile" : {
+                    "Ref" : "EC2AccessInstanceProfile"
+                },
                 "NetworkInterfaces" : [
                     { 
                         "DeviceIndex":"0",
