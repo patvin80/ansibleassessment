@@ -27,6 +27,23 @@
         mode: 0600
       when: ec2_key.changed
 
+    - name: Change file permissions
+      file:
+        path: "./aws-private.pem"
+        owner: tomcat
+        group: root
+        mode: 0644
+
+    - name: Fix new-line issue https://github.com/ansible/ansible-modules-core/issues/33
+      replace: dest=./aws-private.pem regexp='^\n' replace=''
+
+    - name: Change file permissions
+      file:
+        path: "./aws-private.pem"
+        owner: tomcat
+        group: root
+        mode: 0600
+
     - name: Launch instance
       ec2:
         instance_type: "{{ instance_type }}"
