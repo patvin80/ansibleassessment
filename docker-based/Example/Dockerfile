@@ -22,7 +22,7 @@ COPY ./ansible-elk /ansible-elk
 
 RUN mkdir -m 777 /ansible-elk-revised
 COPY ./ansible-elk-revised /ansible-elk-revised
-
+RUN chmod 777 ./ansible-elk-revised/deploy
 # RUN mkdir ~/.ssh
 # COPY ./WitDevEnvironment.pem ~/.ssh
 # COPY ./WitDevEnvironment.pem /ansible-elk
