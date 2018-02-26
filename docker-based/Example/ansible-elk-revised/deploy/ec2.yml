@@ -10,25 +10,29 @@
     instance_type: t2.micro
     region: us-east-1
     security_group: default
+    security_group_id: sg-63a4b914
     vpc_subnet: subnet-f43c76db
     vpcid: vpc-7768ab0c
   tasks:
     - name: Create an EC2 key
       ec2_key:
-        name: "{{ keypairName }}-key"
+        name: "ansibleassessmentkey"
         region: "{{ region }}"
       register: ec2_key
 
-    - name: Save private key
-      copy: content="{{ ec2_key.key.private_key }}" dest="../aws-private.pem" mode=0600
+    - name: save private key
+      copy:
+        content: "{{ ec2_key.key.private_key }}" 
+        dest: "./aws-private.pem" 
+        mode: 0600
       when: ec2_key.changed
 
     - name: Launch instance
       ec2:
         instance_type: "{{ instance_type }}"
         region: "{{ region }}"
-        key_name: "{{ keypair }}"
-        group: "{{ security_group }}"
+        key_name: "ansibleassessmentkey"
+        group_id: "{{ security_group_id }}"
         image: ami-66506c1c
         vpc_subnet_id: "{{ vpc_subnet }}"
         exact_count: 1
@@ -37,7 +41,7 @@
           Name: ELK Server
         instance_tags:
           Name: ELK Server
-      register: ec2
+      register: ec2_info
 
     # This would be ideal, but it does not work.
     # - name: Add all instance public DNS to host group
@@ -48,16 +52,18 @@
     # This requires us to run the playbook twice, because the host is not
     # in the hosts file on the first run.
     - name: Add instance to local host group
-      lineinfile: dest=hosts regexp="{{ item.public_dns_name }}" insertafter="[ec2hosts]" line="{{ item.public_dns_name }} ansible_ssh_private_key_file=/ansible-elk-revised/{{ keypair }}.pem"
+      lineinfile: dest=hosts 
+                  insertafter="[ec2hosts]" 
+                  line="{{ ec2_info.instances[0].public_ip }} ansible_ssh_private_key_file=./aws-private.pem"
       with_items: ec2.instances
 
     - name: Register public DNS fact
       set_fact: public_dns="{{ item.public_dns_name }}"
-      with_items: ec2.instances
+      with_items: ec2_info.instances
 
     - name: Wait for SSH to come up
       wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
-      with_items: ec2.instances
+      with_items: ec2_info.instances
 
 - name: Install python 2
   hosts: ec2hosts
