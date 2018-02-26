@@ -44,7 +44,7 @@
   lineinfile:
    destfile: /etc/elasticsearch/jvm.options
    regexp: '-Xms1g'
-   line: '-Xms150m'
+   line: '-Xms200m'
 
 - name: Updating the max memory requirements in jvmoptions file 
   lineinfile:

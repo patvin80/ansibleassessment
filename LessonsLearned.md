@@ -42,6 +42,8 @@ Error was related to default VPC is not configured for the user.
 1. Kibana Configuration File is kibana.yml - /etc/kibana/kibana.yml
 2. Elasticsearch Configuration File is elacticsearch.yml - /etc/elasticsearch/elasticsearch.yml
 3. Kibana Instructions for apt-get involve updating the apt repository [11]
+4. Elasticsearch Log file sudo vi /var/log/elasticsearch/elasticsearch.log
+5. Memory Constraints of Elasticsearch very rigorous
 
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
