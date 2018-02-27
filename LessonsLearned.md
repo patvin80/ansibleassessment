@@ -38,8 +38,9 @@ Error was related to default VPC is not configured for the user.
 1. Jenkins CLI Setup [5]
 2. Jenkins CLI Authentication [5]
 3. Install Ansible Plugin for Jenkins [6]
-4. Setting up Path Variables in Jenkins [7]
-5. Getting the value of the Jenkins API Key [10]
+4. Used the Bitnami Jenkins Docker Image [12]
+5. Setting up Path Variables in Jenkins [7]
+6. Getting the value of the Jenkins API Key [10]
 
 ## ELK Stack
 1. Kibana Configuration File is kibana.yml - /etc/kibana/kibana.yml
@@ -50,8 +51,6 @@ Error was related to default VPC is not configured for the user.
 
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
-
-## References:
 
 [1]: https://gist.github.com/afternoon/3837048
 [2]: https://www.codeengine.com/articles/install-jenkins-on-amazon-linux/
@@ -65,3 +64,4 @@ Error was related to default VPC is not configured for the user.
 [10]: https://stackoverflow.com/questions/11523809/how-can-i-extract-a-tags-attribute-value-from-an-html-file
 [11]: https://www.elastic.co/guide/en/kibana/current/deb.html
 [12]: https://github.com/sadsfae/ansible-elk
+[13]: https://github.com/bitnami/bitnami-docker-jenkins
