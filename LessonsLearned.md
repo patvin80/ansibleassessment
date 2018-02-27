@@ -6,10 +6,10 @@ Error was related to default VPC is not configured for the user.
 2. Network interfaces and an instance-level security groups may not be specified on the same request. Fixed the issue with the Template to not include Security Group. 
 3. Created a PEM file using the console. Could have automated it.
 4. Jenkins server provided by Bitnami needs to accept terms and the user does not have permissions. Trying the private AMI in the account - ami-13a8a769 -- Does not work
-5. Jenkins Server from scratch based upon Ubuntu Image - [1] ami-5a19976a -- Did not work
-6. Community AMI Jenkins ami-5cb48d4b - Did not work
+5. Jenkins Server from scratch based upon Ubuntu Image - [1] ami-5a19976a -- <b>Did not work</b>
+6. Community AMI Jenkins ami-5cb48d4b - <b>Did not work</b>
 7. Created an Linux AMI and followed instructions here [2]
-8. Checking the logs of the User Data execution found here in /var/log/cloud-init.log
+8. Checking the logs of the User Data execution found here in <b> /var/log/cloud-init.log </b>
 9. Dependency on the .pem file and having it in a publilc repository is risky. Can be overcome by using the S3 location for the key?
 10. Instace Profile was used to give the newly created instance capabilities to provision the EC2 instances and the docker container actually gets permissions from the host.
 
@@ -18,7 +18,7 @@ Error was related to default VPC is not configured for the user.
 2. User does not have capabilities to create AMIs which means that I cannot set up the jobs using the screen and then back up the AMI and use that for CloudFormation. - Question to Mike if this can be changed. No need to change.
 3. More trouble as the newly created VPC is not a DefaultVPC I need to figure out a way to set this to some value so that the EC2 instance Ansible tutorial will work. - Ending up creating a VPC and then passing the VPC everywhere an EC2 Instance was provisioned.
 4. Path variable on the Jenkins server is not able to recognize ansible-playbook. Tried [5], but looks like the path is set correctly but may be Jenkins does not have the permissions to invoke ansible-playbook. Solved using export HOME=/home/`whoami`
-5. Looks like the <s>keys</s> and PEM file need to be in the source control for this solution to work. - Eliminated the need for that by using Instance Profile and ec2_key ansible construct which also generates a key and a private key file.
+5. Looks like the <s>keys</s> and <s>PEM file</s> need to be in the source control for this solution to work. - Eliminated the need for that by using Instance Profile and ec2_key ansible construct which also generates a key and a private key file.
 6. Instance Profile is a great option to avoid the Keys being passed around. However still the PEM file needs to be addressed.
 7. Server size does not support Elasticsearch and Kibana and Logstash to run on the same machine. Might consider moving Elasticsearch to external server or as a service. - Pending
 8. Elasticsearch with wrong configuration, results in Kibana not being able to reach Elasticsearch.
