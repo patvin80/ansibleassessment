@@ -15,21 +15,24 @@ Error was related to default VPC is not configured for the user.
 
 ## Challenges or Blockages:
 1. At this point I have the Linux AMI setup with Jenkins, however I need to override the password. One option I am considering is to do a Post on the Admin URL by reading the file at sudo vi /var/lib/jenkins/secrets/initialAdminPassword.
-2. User does not have capabilities to create AMIs which means that I cannot set up the jobs using the screen and then back up the AMI and use that for CloudFormation. - Question to Mike if this can be changed.
-3. More trouble as the newly created VPC is not a DefaultVPC I need to figure out a way to set this to some value so that the EC2 instance Ansible tutorial will work.
-4. Path variable on the Jenkins server is not able to recognize ansible-playbook. Tried [5], but looks like the path is set correctly but may be Jenkins does not have the permissions to invoke ansible-playbook.
-5. Looks like the <s>keys</s> and PEM file need to be in the source control for this solution to work.
+2. User does not have capabilities to create AMIs which means that I cannot set up the jobs using the screen and then back up the AMI and use that for CloudFormation. - Question to Mike if this can be changed. No need to change.
+3. More trouble as the newly created VPC is not a DefaultVPC I need to figure out a way to set this to some value so that the EC2 instance Ansible tutorial will work. - Ending up creating a VPC and then passing the VPC everywhere an EC2 Instance was provisioned.
+4. Path variable on the Jenkins server is not able to recognize ansible-playbook. Tried [5], but looks like the path is set correctly but may be Jenkins does not have the permissions to invoke ansible-playbook. Solved using export HOME=/home/`whoami`
+5. Looks like the <s>keys</s> and PEM file need to be in the source control for this solution to work. - Eliminated the need for that by using Instance Profile and ec2_key ansible construct which also generates a key and a private key file.
 6. Instance Profile is a great option to avoid the Keys being passed around. However still the PEM file needs to be addressed.
+7. Server size does not support Elasticsearch and Kibana and Logstash to run on the same machine. Might consider moving Elasticsearch to external server or as a service. - Pending
+8. Elasticsearch with wrong configuration, results in Kibana not being able to reach Elasticsearch.
 
 ## Ansible
 1. Install Ansible Instructions on Ubuntu [1]
 2. Install Ansible Instructions on Linux AMI [3]
 3. Passing variables to Ansible Commands [4]
-4. Using the template here [8]. Fixed the yml files which looked like JSON using the tool here [9].
-4.1. Elastic Search version had to be upgraded.
-4.2. Elastic Search configuration had to be change in the main.yml
-4.3. All references to the vars/main.yml removed
-4.4. Kibana installation had to be simplified and any dependencies on the init file and vars folder removed. Now simplified it to just main.yml file based installation.
+4. Using the template here [8]. Fixed the yml files which looked like JSON using the tool here [9]. Modified the templates to upgrade versions and simplify using [12] 
+    4.1. Elastic Search version had to be upgraded.
+    4.2. Elastic Search configuration had to be change in the main.yml
+    4.3. All references to the vars/main.yml removed in Elasticsearch installation
+    4.4. Kibana installation had to be simplified and any dependencies on the init file and vars folder removed. Now simplified it to just main.yml file based installation.
+    4.5. Logstash commented certain failing command.
 
 ## Jenkins
 1. Jenkins CLI Setup [5]
@@ -43,7 +46,7 @@ Error was related to default VPC is not configured for the user.
 2. Elasticsearch Configuration File is elacticsearch.yml - /etc/elasticsearch/elasticsearch.yml
 3. Kibana Instructions for apt-get involve updating the apt repository [11]
 4. Elasticsearch Log file sudo vi /var/log/elasticsearch/elasticsearch.log
-5. Memory Constraints of Elasticsearch very rigorous
+5. Memory Constraints of Elasticsearch very rigorous. /etc/elasticsearch/jvm.options setting the Xms and Xmx configuration values.
 
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
@@ -59,3 +62,4 @@ Error was related to default VPC is not configured for the user.
 [9]: https://www.json2yaml.com/
 [10]: https://stackoverflow.com/questions/11523809/how-can-i-extract-a-tags-attribute-value-from-an-html-file
 [11]: https://www.elastic.co/guide/en/kibana/current/deb.html
+[12]: https://github.com/sadsfae/ansible-elk
