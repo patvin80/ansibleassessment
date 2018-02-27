@@ -14,9 +14,11 @@ A cloudformation template that launches a Jenkins AMI prepackaged with the job. 
 
 ## Steps:
 1. Cloud Formation will instantiate an EC2 Instance with Jenkins Installed and Ansible Installed
--- Use the User Data section of the Cloud Formation Template to fetch an installer file from git hub and run it with sudo command
-2. Configure the Jenkins to ensure that the Login works.
-3. Create a Jenkins Job via the CLI
+-- Use the User Data section of the Cloud Formation Template to provision a Docker Container.
+2. Configure the Jenkins to ensure that the Login works. Aided by the use of the Jenkins Image as it comes with default credentials user | bitnami
+3. Create a Jenkins Job via the CLI. - Ended up creating a Curl command.
+4. Via the Jenkins Job run the ansible playbook to provision the ELK Stack Instance.
+5. Via the Jenkins Job run the ansible playbook to configure ELK Stack on the Instance.
 
 ## Implementation Details:
 1. JenkinsServerFromScratch.json is the Cloud Formation Template
@@ -28,7 +30,7 @@ A cloudformation template that launches a Jenkins AMI prepackaged with the job. 
         2. Pull the ansibleassessment git repository which has all the code to install and provision.
         3. Install Docker-Compose
         4. Run Docker-Compose Build and UP to provision a Jenkins Server. Also copy the ansible scripts to the server. 
-        5. Connect to the Jenkins Server via Rest CLI and user name and password to get API Key
+        5. Connect to the Jenkins Server via CURL and user name and password to get API Key via grep on the response.
         6. Use the config.xml file which is the Jenkins Job definition file
         7. Use curl on the Jenkins URL to upload the job.
         8. Use curl on the Jenkins URL to run the job
