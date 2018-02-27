@@ -19,7 +19,7 @@ Error was related to default VPC is not configured for the user.
 3. More trouble as the newly created VPC is not a DefaultVPC I need to figure out a way to set this to some value so that the EC2 instance Ansible tutorial will work. - Ending up creating a VPC and then passing the VPC everywhere an EC2 Instance was provisioned.
 4. Path variable on the Jenkins server is not able to recognize ansible-playbook. Tried [5], but looks like the path is set correctly but may be Jenkins does not have the permissions to invoke ansible-playbook. Solved using export HOME=/home/`whoami`
 5. Looks like the <s>keys</s> and <s>PEM file</s> need to be in the source control for this solution to work. - Eliminated the need for that by using Instance Profile and ec2_key ansible construct which also generates a key and a private key file.
-6. Instance Profile is a great option to avoid the Keys being passed around. However still the PEM file needs to be addressed.
+6. Instance Profile is a great option to avoid the Keys being passed around. <s>However still the PEM file needs to be addressed.</s> Fixed by generating a key using ec2_key module [14]
 7. Server size does not support Elasticsearch and Kibana and Logstash to run on the same machine. Might consider moving Elasticsearch to external server or as a service. - Pending
 8. Elasticsearch with wrong configuration, results in Kibana not being able to reach Elasticsearch.
 
@@ -38,7 +38,7 @@ Error was related to default VPC is not configured for the user.
 1. Jenkins CLI Setup [5]
 2. Jenkins CLI Authentication [5]
 3. Install Ansible Plugin for Jenkins [6]
-4. Used the Bitnami Jenkins Docker Image [12]
+4. Used the Bitnami Jenkins Docker Image [13]
 5. Setting up Path Variables in Jenkins [7]
 6. Getting the value of the Jenkins API Key [10]
 
@@ -65,3 +65,4 @@ Error was related to default VPC is not configured for the user.
 [11]: https://www.elastic.co/guide/en/kibana/current/deb.html
 [12]: https://github.com/sadsfae/ansible-elk
 [13]: https://github.com/bitnami/bitnami-docker-jenkins
+[14]: https://stackoverflow.com/questions/26422763/how-to-create-a-new-key-in-ansible-using-the-ec2-key-module
