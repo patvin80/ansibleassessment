@@ -28,11 +28,11 @@ Error was related to default VPC is not configured for the user.
 2. Install Ansible Instructions on Linux AMI [3]
 3. Passing variables to Ansible Commands [4]
 4. Using the template here [8]. Fixed the yml files which looked like JSON using the tool here [9]. Modified the templates to upgrade versions and simplify using [12] 
-    4.1. Elastic Search version had to be upgraded.
-    4.2. Elastic Search configuration had to be change in the main.yml
-    4.3. All references to the vars/main.yml removed in Elasticsearch installation
-    4.4. Kibana installation had to be simplified and any dependencies on the init file and vars folder removed. Now simplified it to just main.yml file based installation.
-    4.5. Logstash commented certain failing command.
+    1. Elastic Search version had to be upgraded.
+    2. Elastic Search configuration had to be change in the main.yml
+    3. All references to the vars/main.yml removed in Elasticsearch installation
+    4. Kibana installation had to be simplified and any dependencies on the init file and vars folder removed. Now simplified it to just main.yml file based installation.
+    5. Logstash commented certain failing command.
 
 ## Jenkins
 1. Jenkins CLI Setup [5]
@@ -50,6 +50,8 @@ Error was related to default VPC is not configured for the user.
 
 ## General
 1. ssh ignores pem file if the security is 644 needs to tighten it to 400
+
+## References:
 
 [1]: https://gist.github.com/afternoon/3837048
 [2]: https://www.codeengine.com/articles/install-jenkins-on-amazon-linux/
